@@ -505,10 +505,15 @@ def main():
     # 获取用户输入
     print("\n请选择登录方式：")
     print("  1 - 输入学号和密码自动登录（推荐）")
-    print("  2 - 使用手动配置的Cookie")
-    print("\n提示：如果教务系统有验证码，请选择方式2")
+    print("  2 - 从cookie.json文件加载Cookie")
+    print("  3 - 使用脚本中配置的JSESSIONID和ROUTE")
+    print("\n提示：")
+    print("  - 方式1：自动获取Cookie，首次使用推荐")
+    print("  - 方式2：使用通过方式1自动保存的Cookie，快捷方便")
+    print("  - 方式3：需要在脚本第21-22行手动填写Cookie值")
+    print("  - 如果教务系统有验证码，请选择方式2或3")
     
-    choice = input("\n请输入选项数字 (1/2，默认为1): ").strip()
+    choice = input("\n请输入选项数字 (1/2/3，默认为1): ").strip()
     
     # 如果用户直接回车，默认为1
     if choice == "":
@@ -536,8 +541,8 @@ def main():
         
         print("\n正在验证登录信息...")
         session = get_session(username, password)
-    else:
-        # 尝试从文件加载Cookie
+    elif choice == "2":
+        # 从文件加载Cookie
         file_jsessionid, file_route = load_cookies_from_file()
         
         if file_jsessionid and file_route:
@@ -545,14 +550,29 @@ def main():
             JSESSIONID = file_jsessionid
             ROUTE = file_route
             session = get_session()
-        elif JSESSIONID and ROUTE:
-            print("\n使用手动配置的Cookie登录...")
+        else:
+            print("\n错误：未找到有效的Cookie文件！")
+            print("请先选择方式1登录获取Cookie")
+            return
+    elif choice == "3":
+        # 使用脚本中配置的Cookie
+        if JSESSIONID and ROUTE:
+            print("\n使用脚本中配置的Cookie登录...")
             session = get_session()
         else:
-            print("\n错误：未找到可用的Cookie！")
-            print("请先选择方式1登录获取Cookie")
-            print("或者在脚本中手动配置JSESSIONID和ROUTE变量")
+            print("\n错误：脚本中的JSESSIONID和ROUTE未配置！")
+            print("请在脚本第21-22行填写你的Cookie信息：")
+            print("  JSESSIONID = \"你的JSESSIONID值\"")
+            print("  ROUTE = \"你的ROUTE值\"")
+            print("\n获取方法：")
+            print("  1. 浏览器登录教务系统")
+            print("  2. 按F12打开开发者工具")
+            print("  3. Application → Cookies → 复制JSESSIONID和ROUTE")
             return
+    else:
+        print("\n错误：无效的选项！")
+        print("请重新运行脚本，选择1、2或3")
+        return
 
     # 遍历每个学院
     for college_name, jg_id in COLLEGES.items():
