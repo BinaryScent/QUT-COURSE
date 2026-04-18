@@ -18,3 +18,6 @@ __pycache__/**
 
 # Cookie文件（包含敏感信息）
 utils/my/cookie.json
+
+# 日志目录
+utils/my/logs/
