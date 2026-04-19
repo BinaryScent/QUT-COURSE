@@ -125,14 +125,23 @@ function showCourseList(collegeId) {
     document.getElementById('courseListPage').classList.add('active');
     document.getElementById('breadcrumbCollege5').textContent = currentCollege.name;
 
-    const filterSelect = document.getElementById('courseTypeFilter');
-    const courseTypes = [...new Set(currentCollege.courses.map(c => c.type))];
-    filterSelect.innerHTML = '<option value="">全部类型</option>' + 
-        courseTypes.map(type => `<option value="${type}">${type}</option>`).join('');
-
+    document.getElementById('courseSearchInput').value = '';
     renderCourseList(currentCollege.courses);
 
     window.scrollTo(0, 0);
+}
+
+function searchCourses() {
+    const keyword = document.getElementById('courseSearchInput').value.trim().toLowerCase();
+    if (!keyword) {
+        renderCourseList(currentCollege.courses);
+        return;
+    }
+
+    const filtered = currentCollege.courses.filter(c => 
+        c.name.toLowerCase().includes(keyword)
+    );
+    renderCourseList(filtered);
 }
 
 function renderCourseList(courses) {
@@ -146,19 +155,8 @@ function renderCourseList(courses) {
         <div class="card" onclick="showCourseDetail('${currentCollege.id}', '${course.id}')">
             <i class="fas fa-book"></i>
             <h3>${course.name}</h3>
-            <p>${course.type}</p>
         </div>
     `).join('');
-}
-
-function filterCoursesByType() {
-    const type = document.getElementById('courseTypeFilter').value;
-    if (!type) {
-        renderCourseList(currentCollege.courses);
-    } else {
-        const filtered = currentCollege.courses.filter(c => c.type === type);
-        renderCourseList(filtered);
-    }
 }
 
 function showCourseDetail(collegeId, courseId) {

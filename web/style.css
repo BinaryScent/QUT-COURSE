@@ -297,27 +297,34 @@ body {
     font-size: 15px;
 }
 
-/* 课程筛选 */
-.course-filter {
+/* 课程搜索 */
+.course-search {
     margin-bottom: 24px;
-    padding: 20px;
+    padding: 16px 20px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.course-filter label {
-    font-weight: 500;
-    margin-right: 12px;
+.course-search i {
+    color: var(--text-gray);
+    font-size: 18px;
 }
 
-.course-filter select {
-    padding: 10px 16px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
+.course-search input {
+    flex: 1;
+    padding: 10px 0;
+    border: none;
+    outline: none;
     font-size: 16px;
-    min-width: 200px;
-    background: white;
+    color: var(--text-dark);
+}
+
+.course-search input::placeholder {
+    color: #aaa;
 }
 
 /* 培养方案内容 */

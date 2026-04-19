@@ -121,11 +121,9 @@
                 <span>课程列表</span>
             </div>
             <h2 class="page-title">课程资料</h2>
-            <div class="course-filter">
-                <label for="courseTypeFilter">筛选类型：</label>
-                <select id="courseTypeFilter" onchange="filterCoursesByType()">
-                    <option value="">全部类型</option>
-                </select>
+            <div class="course-search">
+                <i class="fas fa-search"></i>
+                <input type="text" id="courseSearchInput" placeholder="搜索课程名称..." oninput="searchCourses()">
             </div>
             <div id="courseListContainer" class="card-container"></div>
         </section>
