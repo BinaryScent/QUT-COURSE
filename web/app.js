@@ -1,8 +1,3 @@
-let currentCollege = null;
-let currentMajor = null;
-let currentGrade = null;
-let currentCourse = null;
-
 document.addEventListener('DOMContentLoaded', function() {
     initNavbar();
 });
