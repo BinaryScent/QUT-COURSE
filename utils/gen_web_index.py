@@ -44,7 +44,8 @@ def collect_courses_from_dirs(courses_dir):
         log(f"  学院 [{college_name}]: {len(course_dirs)} 个课程目录")
 
         for course_dir in course_dirs:
-            course_name = course_dir.name
+            dir_name = course_dir.name
+            course_name = dir_name.rsplit('-', 1)[0] if '-' in dir_name else dir_name
             courses_by_college[college_name][course_name] = {
                 "resources": {
                     "homeworks": [],
@@ -134,10 +135,9 @@ def collect_major_info(docs_dir):
                                 course_type = course.get('kclbmc', '未分类')
 
                                 if course_name:
-                                    course_id = f"{course_name}-{course_type}"
-                                    if course_id not in colleges_data[college_name]["courses"]:
-                                        colleges_data[college_name]["courses"][course_id] = {
-                                            "id": course_id,
+                                    if course_name not in colleges_data[college_name]["courses"]:
+                                        colleges_data[college_name]["courses"][course_name] = {
+                                            "id": course_name,
                                             "name": course_name,
                                             "type": course_type,
                                             "resources": {
@@ -168,15 +168,12 @@ def merge_data(colleges_data, courses_by_college):
     for college_name, college in colleges_data.items():
         for course in college["courses"]:
             course_name = course["name"]
-            possible_ids = [course_name, course["id"]]
             
             if college_name in courses_by_college:
                 course_resources = courses_by_college[college_name]
-                for course_id in possible_ids:
-                    if course_id in course_resources:
-                        course["resources"] = course_resources[course_id]["resources"]
-                        merged_count += 1
-                        break
+                if course_name in course_resources:
+                    course["resources"] = course_resources[course_name]["resources"]
+                    merged_count += 1
 
     log(f"  合并了 {merged_count} 门课程的资源")
 
