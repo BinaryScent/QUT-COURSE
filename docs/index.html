@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>青岛理工大学课程资源</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <a href="#" class="logo">
+                    <img src="https://images.unsplash.com/photo-1627870215942-525499665294?w=40" alt="校徽" class="logo-img">
+                    <span>青岛理工大学课程资源</span>
+                </a>
+            </div>
+            
+            <nav class="navbar-center">
+                <ul class="nav-list" id="navColleges"></ul>
+            </nav>
+            
+            <div class="navbar-right">
+                <a href="https://github.com/BinaryScent/QUT-COURSE" class="github-link" target="_blank">
+                    <i class="fab fa-github"></i>
+                    <span>GitHub</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main class="main-container">
+        <!-- 首页 -->
+        <section id="homePage" class="page active">
+            <div class="hero">
+                <h1>青岛理工大学课程资源</h1>
+                <p>汇聚全校课程资料，助力学子学习成长</p>
+                <div class="hero-image">
+                    <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800" alt="校园">
+                </div>
+            </div>
+        </section>
+
+        <!-- 年级页 -->
+        <section id="gradePage" class="page">
+            <div class="breadcrumb">
+                <a href="#" onclick="showHome()">首页</a>
+                <span>/</span>
+                <span id="breadcrumbCollege"></span>
+            </div>
+            <h2 class="page-title">选择年级</h2>
+            <div id="gradesContainer" class="card-container"></div>
+        </section>
+
+        <!-- 专业页 -->
+        <section id="majorPage" class="page">
+            <div class="breadcrumb">
+                <a href="#" onclick="showHome()">首页</a>
+                <span>/</span>
+                <a href="#" onclick="showGrades(currentCollege.id)" id="breadcrumbCollege2"></a>
+                <span>/</span>
+                <span id="breadcrumbGrade"></span>
+            </div>
+            <h2 class="page-title">选择专业</h2>
+            <div id="majorsContainer" class="card-container"></div>
+        </section>
+
+        <!-- 专业详情页 -->
+        <section id="majorDetailPage" class="page">
+            <div class="page-layout">
+                <!-- 左侧导航 -->
+                <aside class="sidebar">
+                    <div class="breadcrumb">
+                        <a href="#" onclick="showHome()">首页</a>
+                        <span>/</span>
+                        <a href="#" onclick="showGrades(currentCollege.id)" id="breadcrumbCollege3"></a>
+                        <span>/</span>
+                        <a href="#" onclick="showMajors(currentCollege.id, currentGrade.id)" id="breadcrumbGrade2"></a>
+                        <span>/</span>
+                        <span id="breadcrumbMajor"></span>
+                    </div>
+                    <nav class="sidebar-nav">
+                        <div class="sidebar-item active" data-section="plan" onclick="showSection('plan')">
+                            <i class="fas fa-file-alt"></i>
+                            <span>培养方案</span>
+                        </div>
+                        <div class="sidebar-item" data-section="courses" onclick="showSection('courses')">
+                            <i class="fas fa-book"></i>
+                            <span>课程资料</span>
+                        </div>
+                    </nav>
+                </aside>
+
+                <!-- 右侧内容 -->
+                <div class="content-area">
+                    <!-- 培养方案 -->
+                    <div id="planSection" class="content-section active">
+                        <h2 class="section-title">培养方案</h2>
+                        <div id="planContent" class="plan-content"></div>
+                    </div>
+
+                    <!-- 课程资料 -->
+                    <div id="coursesSection" class="content-section">
+                        <h2 class="section-title">课程资料</h2>
+                        <div class="course-selector">
+                            <label for="courseSelect">选择课程：</label>
+                            <select id="courseSelect" onchange="showCourseResources()">
+                                <option value="">-- 请选择课程 --</option>
+                            </select>
+                        </div>
+                        <div id="courseResources" class="course-resources"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>&copy; 2024 青岛理工大学课程资源. 版权所有.</p>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

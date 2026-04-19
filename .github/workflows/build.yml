@@ -16,14 +16,9 @@ jobs:
       with:
           python-version: '3.10'  # 简化版本号，使用最新的3.10.x
     
-    - name: install python modules
-      run: pip install flake8 markdown pypinyin
-    #- name: format code
-    #  run: flake8 . --count --select=E9,F63,F72,F82 --show-
-    - name: generate information
+    - name: generate web pages
       run: |
-          python3 utils/genReadme.py
-          python3 utils/genIndex.py
+          python3 utils/gen_web_index.py
     
     - name: git config
       run: |
