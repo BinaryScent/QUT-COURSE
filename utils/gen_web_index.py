@@ -70,6 +70,7 @@ def collect_courses_from_dirs(courses_dir):
 
 
 def collect_major_info(docs_dir):
+    """收集专业和培养方案信息，新结构：学院 -> 专业 -> plans[]"""
     colleges_data = {}
 
     if not docs_dir.exists():
@@ -94,19 +95,20 @@ def collect_major_info(docs_dir):
                 colleges_data[college_name] = {
                     "id": college_name,
                     "name": college_name,
-                    "grades": {}
-                }
-
-            if grade not in colleges_data[college_name]["grades"]:
-                colleges_data[college_name]["grades"][grade] = {
-                    "id": grade,
-                    "name": grade,
-                    "majors": []
+                    "majors": {},
+                    "courses": {}
                 }
 
             major_dirs = [d for d in college_dir.iterdir() if d.is_dir()]
             for major_dir in major_dirs:
                 major_name = major_dir.name.rsplit('-', 1)[0]
+
+                if major_name not in colleges_data[college_name]["majors"]:
+                    colleges_data[college_name]["majors"][major_name] = {
+                        "id": major_name,
+                        "name": major_name,
+                        "plans": []
+                    }
 
                 plan_file = ""
                 for f in major_dir.iterdir():
@@ -115,12 +117,11 @@ def collect_major_info(docs_dir):
                         plan_file = raw_url(Path("utils") / "data" / rel_path)
                         break
 
-                major_data = {
-                    "id": major_name,
-                    "name": major_name,
-                    "planFile": plan_file,
-                    "courses": []
-                }
+                if plan_file:
+                    colleges_data[college_name]["majors"][major_name]["plans"].append({
+                        "grade": grade,
+                        "file": plan_file
+                    })
 
                 courses_json = major_dir / "courses.json"
                 if courses_json.exists():
@@ -128,64 +129,54 @@ def collect_major_info(docs_dir):
                         with open(courses_json, 'r', encoding='utf-8') as f:
                             course_list = json.load(f)
                         if isinstance(course_list, list):
-                            seen_ids = set()
                             for course in course_list:
                                 course_name = course.get('kcmc', '')
                                 course_type = course.get('kclbmc', '未分类')
-                                college_of_course = course.get('kkbmmc', '')
 
                                 if course_name:
                                     course_id = f"{course_name}-{course_type}"
-                                    if course_id not in seen_ids:
-                                        seen_ids.add(course_id)
-                                        major_data["courses"].append({
+                                    if course_id not in colleges_data[college_name]["courses"]:
+                                        colleges_data[college_name]["courses"][course_id] = {
                                             "id": course_id,
                                             "name": course_name,
                                             "type": course_type,
-                                            "college": college_of_course,
                                             "resources": {
                                                 "homeworks": [],
                                                 "labs": [],
                                                 "exams": [],
                                                 "notes": []
                                             }
-                                        })
-                            total_courses += len(major_data["courses"])
+                                        }
+                                        total_courses += 1
                     except Exception as e:
                         log(f"  警告: 解析 {courses_json} 失败: {e}")
 
-                colleges_data[college_name]["grades"][grade]["majors"].append(major_data)
                 total_majors += 1
 
-    log(f"  共收集 {total_majors} 个专业, {total_courses} 门课程")
+    log(f"  共收集 {total_majors} 个专业条目, {total_courses} 门课程")
 
     for college_name, college in colleges_data.items():
-        grades_list = []
-        for grade_id, grade_data in college["grades"].items():
-            grades_list.append(grade_data)
-        college["grades"] = grades_list
+        college["majors"] = list(college["majors"].values())
+        college["courses"] = list(college["courses"].values())
 
     return colleges_data
 
 
 def merge_data(colleges_data, courses_by_college):
+    """合并课程资源到新结构"""
     merged_count = 0
     for college_name, college in colleges_data.items():
-        for grade in college["grades"]:
-            for major in grade["majors"]:
-                for course in major["courses"]:
-                    course_college = course.get("college", college_name)
-                    if course_college in courses_by_college:
-                        course_resources = courses_by_college[course_college]
-                        possible_ids = [
-                            course["name"],
-                            course["id"],
-                        ]
-                        for course_id in possible_ids:
-                            if course_id in course_resources:
-                                course["resources"] = course_resources[course_id]["resources"]
-                                merged_count += 1
-                                break
+        for course in college["courses"]:
+            course_name = course["name"]
+            possible_ids = [course_name, course["id"]]
+            
+            if college_name in courses_by_college:
+                course_resources = courses_by_college[college_name]
+                for course_id in possible_ids:
+                    if course_id in course_resources:
+                        course["resources"] = course_resources[course_id]["resources"]
+                        merged_count += 1
+                        break
 
     log(f"  合并了 {merged_count} 门课程的资源")
 

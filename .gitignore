@@ -21,3 +21,19 @@ utils/my/cookie.json
 
 # 日志目录
 utils/my/logs/
+
+# IDE配置
+.idea/
+
+# 临时备份和转换文件
+backup-modified/
+convert-data.js
+data.js.bak
+test-data.js
+
+# 根目录临时文件（源文件在web/和docs/目录）
+/app.js
+/index.html
+/style.css
+/data.js
+/images/
