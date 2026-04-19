@@ -1,9 +1,9 @@
 name: build
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,18 +27,18 @@ jobs:
     
     - name: git config
       run: |
-          git config --global user.name "heqin-zhu"
-          git config --global user.email "zhuheqin1@gmail.com"
+          git config --global user.name "BinaryScent"
+          git config --global user.email "far411524@gmail.com"
     
     - name: generate pages and push to gh-pages branch
       run: |
           cd docs
           git init
           # 使用HTTPS协议而非SSH，避免密钥问题
-          git remote add origin https://github.com/USTC-Resource/USTC-Course.git
+          git remote add origin https://github.com/BinaryScent/QUT-COURSE.git
           git add --all
           export TZ='Asia/Shanghai'
           git commit -m "Update webpages at `date +%Y-%m-%d,%H:%M` UTC+8"  # 修复时间格式错误(%m改为%M)
           
           # 使用GitHub官方令牌和推荐的认证格式
-          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/USTC-Resource/USTC-Course.git" HEAD:gh-pages
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/BinaryScent/QUT-COURSE.git" HEAD:gh-pages
