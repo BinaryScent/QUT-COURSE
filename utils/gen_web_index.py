@@ -195,6 +195,14 @@ def copy_web_files(web_src, web_dest):
             shutil.copy2(f, dest_dir / f.name)
             log(f"    {f.name}")
 
+        dirs = [d for d in src_dir.iterdir() if d.is_dir()]
+        for d in dirs:
+            dest_sub = dest_dir / d.name
+            if dest_sub.exists():
+                shutil.rmtree(dest_sub)
+            shutil.copytree(d, dest_sub)
+            log(f"    目录: {d.name}/")
+
 
 def copy_dir_with_progress(src, dest, label):
     if dest.exists():
