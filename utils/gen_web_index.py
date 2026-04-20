@@ -45,7 +45,7 @@ def collect_courses_from_dirs(courses_dir):
 
         for course_dir in course_dirs:
             dir_name = course_dir.name
-            course_name = dir_name.rsplit('-', 1)[0] if '-' in dir_name else dir_name
+            course_name = dir_name
             courses_by_college[college_name][course_name] = {
                 "resources": {
                     "homeworks": [],
@@ -163,19 +163,26 @@ def collect_major_info(docs_dir):
 
 
 def merge_data(colleges_data, courses_by_college):
-    """合并课程资源到新结构"""
+    """合并课程资源到新结构，支持跨学院匹配"""
     merged_count = 0
+    total_courses = 0
+    
+    all_course_resources = {}
+    for college_name, college_courses in courses_by_college.items():
+        for course_name, course_data in college_courses.items():
+            if course_name not in all_course_resources:
+                all_course_resources[course_name] = course_data["resources"]
+    
     for college_name, college in colleges_data.items():
         for course in college["courses"]:
             course_name = course["name"]
+            total_courses += 1
             
-            if college_name in courses_by_college:
-                course_resources = courses_by_college[college_name]
-                if course_name in course_resources:
-                    course["resources"] = course_resources[course_name]["resources"]
-                    merged_count += 1
+            if course_name in all_course_resources:
+                course["resources"] = all_course_resources[course_name]
+                merged_count += 1
 
-    log(f"  合并了 {merged_count} 门课程的资源")
+    log(f"  合并了 {merged_count}/{total_courses} 门课程的资源")
 
     result = {
         "colleges": list(colleges_data.values())

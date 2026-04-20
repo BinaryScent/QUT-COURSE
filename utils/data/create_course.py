@@ -238,8 +238,8 @@ def create_course_directories(courses_data, course_root, subdirs, logger=None):
         if college not in college_courses:
             college_courses[college] = set()
         
-        # 课程目录名：课程名称-课程类型（清理非法字符）
-        course_dir_name = sanitize_filename(f"{course_info['course_name']}-{course_info['course_type']}")
+        # 课程目录名：课程名称（清理非法字符）
+        course_dir_name = sanitize_filename(course_info['course_name'])
         college_courses[college].add(course_dir_name)
     
     # 统计
