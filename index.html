@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>青岛理工大学课程资源</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <a href="#" class="logo">
+                    <img src="https://images.unsplash.com/photo-1627870215942-525499665294?w=40" alt="校徽" class="logo-img">
+                    <span>青岛理工大学课程资源</span>
+                </a>
+            </div>
+            
+            <nav class="navbar-center">
+                <ul class="nav-list" id="navColleges"></ul>
+            </nav>
+            
+            <div class="navbar-right">
+                <a href="https://github.com/BinaryScent/QUT-COURSE" class="github-link" target="_blank">
+                    <i class="fab fa-github"></i>
+                    <span>GitHub</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main class="main-container">
+        <!-- 首页 -->
+        <section id="homePage" class="page active">
+            <div class="hero">
+                <h1>青岛理工大学课程资源</h1>
+                <p>汇聚全校课程资料，助力学子学习成长</p>
+                <div class="hero-image">
+                    <img src="images/qut.jpg" alt="校园">
+                </div>
+            </div>
+        </section>
+
+        <!-- 学院页 -->
+        <section id="collegePage" class="page">
+            <div class="breadcrumb">
+                <a href="#" onclick="showHome()">首页</a>
+                <span>/</span>
+                <span id="breadcrumbCollege"></span>
+            </div>
+            <h2 class="page-title">选择功能</h2>
+            <div class="entry-container">
+                <div class="entry-card" onclick="showMajorListForPlan(currentCollege.id)">
+                    <i class="fas fa-file-pdf"></i>
+                    <h3>培养方案</h3>
+                    <p>按专业、年级查看培养方案</p>
+                </div>
+                <div class="entry-card" onclick="showCourseList(currentCollege.id)">
+                    <i class="fas fa-book"></i>
+                    <h3>课程资料</h3>
+                    <p>浏览课程作业、实验、考试等资料</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 专业列表页（用于培养方案） -->
+        <section id="majorListPage" class="page">
+            <div class="breadcrumb">
+                <a href="#" onclick="showHome()">首页</a>
+                <span>/</span>
+                <a href="#" onclick="showCollegePage(currentCollege.id)" id="breadcrumbCollege2"></a>
+                <span>/</span>
+                <span>选择专业</span>
+            </div>
+            <h2 class="page-title">选择专业</h2>
+            <div id="majorListContainer" class="card-container"></div>
+        </section>
+
+        <!-- 年级列表页（用于培养方案） -->
+        <section id="gradeListPage" class="page">
+            <div class="breadcrumb">
+                <a href="#" onclick="showHome()">首页</a>
+                <span>/</span>
+                <a href="#" onclick="showCollegePage(currentCollege.id)" id="breadcrumbCollege3"></a>
+                <span>/</span>
+                <a href="#" onclick="showMajorListForPlan(currentCollege.id)" id="breadcrumbMajor"></a>
+                <span>/</span>
+                <span>选择年级</span>
+            </div>
+            <h2 class="page-title">选择年级</h2>
+            <div id="gradeListContainer" class="card-container"></div>
+        </section>
+
+        <!-- 培养方案下载页 -->
+        <section id="planDownloadPage" class="page">
+            <div class="breadcrumb">
+                <a href="#" onclick="showHome()">首页</a>
+                <span>/</span>
+                <a href="#" onclick="showCollegePage(currentCollege.id)" id="breadcrumbCollege4"></a>
+                <span>/</span>
+                <a href="#" onclick="showMajorListForPlan(currentCollege.id)" id="breadcrumbMajor2"></a>
+                <span>/</span>
+                <a href="#" onclick="showGradeListForPlan(currentCollege.id, currentMajor.id)" id="breadcrumbGrade"></a>
+                <span>/</span>
+                <span>培养方案</span>
+            </div>
+            <h2 class="page-title">培养方案下载</h2>
+            <div id="planDownloadContent" class="plan-content"></div>
+        </section>
+
+        <!-- 课程列表页 -->
+        <section id="courseListPage" class="page">
+            <div class="breadcrumb">
+                <a href="#" onclick="showHome()">首页</a>
+                <span>/</span>
+                <a href="#" onclick="showCollegePage(currentCollege.id)" id="breadcrumbCollege5"></a>
+                <span>/</span>
+                <span>课程列表</span>
+            </div>
+            <h2 class="page-title">课程资料</h2>
+            <div class="course-search">
+                <i class="fas fa-search"></i>
+                <input type="text" id="courseSearchInput" placeholder="搜索课程名称..." oninput="searchCourses()">
+            </div>
+            <div id="courseListContainer" class="card-container"></div>
+        </section>
+
+        <!-- 课程详情页 -->
+        <section id="courseDetailPage" class="page">
+            <div class="breadcrumb">
+                <a href="#" onclick="showHome()">首页</a>
+                <span>/</span>
+                <a href="#" onclick="showCollegePage(currentCollege.id)" id="breadcrumbCollege6"></a>
+                <span>/</span>
+                <a href="#" onclick="showCourseList(currentCollege.id)" id="breadcrumbCourseList">课程列表</a>
+                <span>/</span>
+                <span id="breadcrumbCourse"></span>
+            </div>
+            <h2 class="page-title" id="courseDetailTitle"></h2>
+            <div class="resource-tabs">
+                <button class="tab-btn active" data-type="homeworks" onclick="showResourceType('homeworks')">
+                    <i class="fas fa-pencil-alt"></i> 作业
+                </button>
+                <button class="tab-btn" data-type="labs" onclick="showResourceType('labs')">
+                    <i class="fas fa-flask"></i> 实验
+                </button>
+                <button class="tab-btn" data-type="exams" onclick="showResourceType('exams')">
+                    <i class="fas fa-file-alt"></i> 考试
+                </button>
+                <button class="tab-btn" data-type="notes" onclick="showResourceType('notes')">
+                    <i class="fas fa-sticky-note"></i> 笔记
+                </button>
+            </div>
+            <div id="homeworksTab" class="resource-tab-content active">
+                <div id="homeworksContent"></div>
+            </div>
+            <div id="labsTab" class="resource-tab-content">
+                <div id="labsContent"></div>
+            </div>
+            <div id="examsTab" class="resource-tab-content">
+                <div id="examsContent"></div>
+            </div>
+            <div id="notesTab" class="resource-tab-content">
+                <div id="notesContent"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>&copy; 2024 青岛理工大学课程资源. 版权所有.</p>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
